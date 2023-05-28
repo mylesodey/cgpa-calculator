@@ -1,0 +1,72 @@
+.cgpa-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  
+  .cgpa-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .year-container {
+    margin-bottom: 20px;
+  }
+  
+  .semester-container {
+    margin-bottom: 10px;
+  }
+  
+  .course-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .course-select,
+  .course-input {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  .course-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+  }
+  
+  .add-course-button,
+  .remove-course-button {
+    padding: 5px 10px;
+    margin-left: 10px;
+  }
+  
+  .calculate-button {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .result-container {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+  }
+  
+  .result-container h3 {
+    margin: 0;
+  }

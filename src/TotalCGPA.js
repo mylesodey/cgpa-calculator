@@ -72,72 +72,77 @@ const TotalCGPA = () => {
 
   return (
     <div className="cgpa-container">
-      <h2 className="cgpa-title">CGPA Calculator</h2>
+      <div className="her">
+        <h2 className="cgpa-title">CGPA Calculator</h2>
+      </div>
+      <div className="all">
+        {years.map((year, yearIndex) => (
+          <div key={yearIndex} className="year-container">
+            <h3>Year {yearIndex + 1}</h3>
 
-      {years.map((year, yearIndex) => (
-        <div key={yearIndex} className="year-container">
-          <h3>Year {yearIndex + 1}</h3>
+            {year.semesters.map((semester, semesterIndex) => (
+              <div key={semesterIndex} className="semester-container">
+                <h4>Semester {semesterIndex + 1}</h4>
 
-          {year.semesters.map((semester, semesterIndex) => (
-            <div key={semesterIndex} className="semester-container">
-              <h4>Semester {semesterIndex + 1}</h4>
+                {semester.courses.map((course, courseIndex) => (
+                  <div key={courseIndex} className="course-item">
+                    <select
+                      name="courseName"
+                      value={course.courseName}
+                      onChange={(e) => handleCourseChange(yearIndex, semesterIndex, courseIndex, e)}
+                      className="course-select"
+                    >
+                      <option value="">Select Course</option>
+                      {courseOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="number"
+                      name="creditPoints"
+                      placeholder="Credit Points"
+                      value={course.creditPoints}
+                      onChange={(e) => handleCourseChange(yearIndex, semesterIndex, courseIndex, e)}
+                      className="course-input"
+                    />
+                    <input
+                      type="number"
+                      name="creditHours"
+                      placeholder="Credit Hours"
+                      value={course.creditHours}
+                      onChange={(e) => handleCourseChange(yearIndex, semesterIndex, courseIndex, e)}
+                      className="course-input"
+                    />
+                    <button
+                      className="remove-course-button"
+                      onClick={() => handleRemoveCourse(yearIndex, semesterIndex, courseIndex)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
 
-              {semester.courses.map((course, courseIndex) => (
-                <div key={courseIndex} className="course-item">
-                  <select
-                    name="courseName"
-                    value={course.courseName}
-                    onChange={(e) => handleCourseChange(yearIndex, semesterIndex, courseIndex, e)}
-                    className="course-select"
-                  >
-                    <option value="">Select Course</option>
-                    {courseOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="number"
-                    name="creditPoints"
-                    placeholder="Credit Points"
-                    value={course.creditPoints}
-                    onChange={(e) => handleCourseChange(yearIndex, semesterIndex, courseIndex, e)}
-                    className="course-input"
-                  />
-                  <input
-                    type="number"
-                    name="creditHours"
-                    placeholder="Credit Hours"
-                    value={course.creditHours}
-                    onChange={(e) => handleCourseChange(yearIndex, semesterIndex, courseIndex, e)}
-                    className="course-input"
-                  />
-                  <button
-                    className="remove-course-button"
-                    onClick={() => handleRemoveCourse(yearIndex, semesterIndex, courseIndex)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
+                <button
+                  className="add-course-button"
+                  onClick={() => handleAddCourse(yearIndex, semesterIndex)}
+                >
+                  Add Course
+                </button>
+              </div>
+            ))}
 
-              <button
-                className="add-course-button"
-                onClick={() => handleAddCourse(yearIndex, semesterIndex)}
-              >
-                Add Course
-              </button>
-            </div>
-          ))}
+          </div>
+        ))}
+      </div>
+      <div className="calc">
+        <button className="calculate-button" onClick={calculateCGPA}>
+          Calculate CGPA
+        </button>
+        <div className="calculated">
+          <h3>CGPA: {cgpa}</h3>
         </div>
-      ))}
-
-      <button className="calculate-button" onClick={calculateCGPA}>
-        Calculate CGPA
-      </button>
-      <div className="calculated">
-        <h3>CGPA: {cgpa}</h3>
       </div>
     </div>
   );

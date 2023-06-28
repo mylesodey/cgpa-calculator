@@ -1,19 +1,6 @@
 import React, { useState } from 'react';
 import './TotalCGPA.css';
 
-const courseOptions = [
-  { value: 'BIO 1101', label: 'BIO 1101' },
-  { value: 'CHM 1101', label: 'CHM 1101' },
-  { value: 'CSC 1101', label: 'CSC 1101' },
-  { value: 'GSS 1101', label: 'GSS 1101' },
-  { value: 'GSS 1102', label: 'GSS 1102' },
-  { value: 'GSS 1103', label: 'GSS 1103' },
-  { value: 'MTH 1101', label: 'MTH 1101' },
-  { value: 'PHY 1101', label: 'PHY 1101' },
-  { value: 'PHY 1104', label: 'PHY 1104' },
-  // Add more course options as needed
-];
-
 const TotalCGPA = () => {
   const [years, setYears] = useState([
     { semesters: [{ courses: [] }, { courses: [] }] },
@@ -57,16 +44,17 @@ const TotalCGPA = () => {
 
         for (let k = 0; k < semester.courses.length; k++) {
           const { creditPoints, creditHours } = semester.courses[k];
-          const coursePoints = creditPoints * parseFloat(creditHours);
-          totalPoints += coursePoints;
+          // const coursePoints = creditPoints * parseFloat(creditHours);
+          totalPoints += parseFloat(creditPoints);
           totalCredits += parseFloat(creditHours);
         }
       }
     }
 
     const calculatedCGPA = totalPoints / totalCredits;
+    const roundedCGPA = calculatedCGPA.toFixed(2);
     // Perform further calculations or display the calculated CGPA as needed
-    setCGPA(calculatedCGPA);
+    setCGPA(roundedCGPA);
   };
 
 
@@ -86,19 +74,14 @@ const TotalCGPA = () => {
 
                 {semester.courses.map((course, courseIndex) => (
                   <div key={courseIndex} className="course-item">
-                    <select
+                    <input
+                      type="text"
                       name="courseName"
+                      placeholder="Course Name"
                       value={course.courseName}
                       onChange={(e) => handleCourseChange(yearIndex, semesterIndex, courseIndex, e)}
-                      className="course-select"
-                    >
-                      <option value="">Select Course</option>
-                      {courseOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                      className="course-input"
+                    />
                     <input
                       type="number"
                       name="creditPoints"

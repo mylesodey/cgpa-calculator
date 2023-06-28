@@ -1,105 +1,143 @@
 import React, { useState } from 'react';
-import './CGPACalculator.css';
-
-const GradingSystem = {
-  A: 4,
-  B: 3,
-  C: 2,
-  D: 1,
-  F: 0,
-};
+import './CGPACalculator.css'; // Import the CSS file for styling
 
 const CGPACalculator = () => {
   const [courses, setCourses] = useState([]);
-  const [totalGradePoints, setTotalGradePoints] = useState(0);
-  const [totalCreditHours, setTotalCreditHours] = useState(0);
-  const [cgpa, setCGPA] = useState(0);
+  const [newCourse, setNewCourse] = useState({
+    title: '',
+    grade: '',
+    creditHours: '',
+    creditPoints: '',
+  });
+  const [cgpa, setCGPA] = useState(null);
 
-  const handleCourseChange = (index, event) => {
-    const { name, value } = event.target;
-    const updatedCourses = [...courses];
-    updatedCourses[index][name] = value;
-    setCourses(updatedCourses);
+  const handleInputChange = (e) => {
+    setNewCourse({ ...newCourse, [e.target.name]: e.target.value });
   };
 
-  const handleAddCourse = () => {
-    setCourses([...courses, { courseName: '', grade: '', creditHours: 0 }]);
-  };
-
-  const handleRemoveCourse = (index) => {
-    const updatedCourses = [...courses];
-    updatedCourses.splice(index, 1);
-    setCourses(updatedCourses);
+  const addCourse = () => {
+    setCourses([...courses, newCourse]);
+    setNewCourse({ title: '', grade: '', creditHours: '', creditPoints: '' });
   };
 
   const calculateCGPA = () => {
-    let totalPoints = 0;
-    let totalCredits = 0;
+    let totalQualityPoints = 0;
+    let totalCreditHours = 0;
 
     for (let i = 0; i < courses.length; i++) {
-      const { grade, creditHours } = courses[i];
-      const gradePoint = GradingSystem[grade];
-      const coursePoints = gradePoint * creditHours;
-      totalPoints += coursePoints;
-      totalCredits += creditHours;
+      const { grade, creditHours, creditPoints } = courses[i];
+      const gradePoints = getGradePoints(grade);
+      const qualityPoints = gradePoints * parseFloat(creditPoints);
+      totalQualityPoints += qualityPoints;
+      totalCreditHours += parseInt(creditHours);
     }
 
-    const calculatedCGPA = totalPoints / totalCredits;
-    setTotalGradePoints(totalPoints);
-    setTotalCreditHours(totalCredits);
-    setCGPA(calculatedCGPA);
+    const calculatedCGPA = totalQualityPoints / totalCreditHours;
+    setCGPA(calculatedCGPA.toFixed(2));
+  };
+
+  const getGradePoints = (grade) => {
+    // Define your grading scale and corresponding grade points here
+    // Example: A = 70% to 100%, B = 60% to 69%, C = 50% to 59%, D = 45% to 49%, E = 40% to 44%, F = 0% to 39%
+    switch (grade) {
+      case 'A':
+        return 4;
+      case 'B':
+        return 3;
+      case 'C':
+        return 2;
+      case 'D':
+        return 1;
+      case 'F':
+        return 0;
+      default:
+        return 0;
+    }
   };
 
   return (
-    <div className="cgpa-container">
-      <h2 className="cgpa-title">CGPA Calculator</h2>
-      <button className="add-course-button" onClick={handleAddCourse}>
-        Add Course
-      </button>
-      <div className="course-list">
-        {courses.map((course, index) => (
-          <div key={index} className="course-item">
-            <input
-              type="text"
-              name="courseName"
-              placeholder="Course Name"
-              value={course.courseName}
-              onChange={(e) => handleCourseChange(index, e)}
-              className="course-input"
-            />
-            <input
-              type="text"
-              name="grade"
-              placeholder="Grade (A, B, C, D, F)"
-              value={course.grade}
-              onChange={(e) => handleCourseChange(index, e)}
-              className="course-input"
-            />
-            <input
-              type="number"
-              name="creditHours"
-              placeholder="Credit Hours"
-              value={course.creditHours}
-              onChange={(e) => handleCourseChange(index, e)}
-              className="course-input"
-            />
-            <button
-              className="remove-course-button"
-              onClick={() => handleRemoveCourse(index)}
-            >
-              Remove
-            </button>
-          </div>
-        ))}
+    <div className="cgpa-calculator">
+      <h2>CGPA Calculator</h2>
+      <table className="course-table">
+      <thead>
+          <tr>
+            <th>Course</th>
+            <th>Grade</th>
+            <th>Credit Hours</th>
+            <th>Credit Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {courses.map((course, index) => (
+            <tr key={index}>
+              <td>{course.title}</td>
+              <td>{course.grade}</td>
+              <td>{course.creditHours}</td>
+              <td>{course.creditPoints}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="input-group">
+        <label>Course Title:</label>
+        <select
+          name="title"
+          value={newCourse.title}
+          onChange={handleInputChange}
+        >
+          <option value="">Select a course</option>
+          <option value="BIO 1101">BIO 1101</option>
+          <option value="CHM 1101">CHM 1101</option>
+          <option value="CSC 1101">CSC 1101</option>
+          <option value="GSS 1101">GSS 1101</option>
+          <option value="GSS 1102">GSS 1102</option>
+          <option value="GSS 1103">GSS 1103</option>
+          <option value="MTH 1101">MTH 1101</option>
+          <option value="PHY 1101">PHY 1101</option>
+          <option value="PHY 1104">PHY 1104</option>
+          <option value="CSC 1201">CSC 1201</option>
+          {/* Add more options as needed */}
+        </select>
       </div>
-      <button className="calculate-button" onClick={calculateCGPA}>
-        Calculate CGPA
-      </button>
-      <div className="result-container">
-        <h3>Total Grade Points: {totalGradePoints}</h3>
-        <h3>Total Credit Hours: {totalCreditHours}</h3>
-        <h3>CGPA: {cgpa.toFixed(2)}</h3>
+      <div className="input-group">
+        <label>Grade:</label>
+        <select
+          name="grade"
+          value={newCourse.grade}
+          onChange={handleInputChange}
+        >
+          <option value="">Select a grade</option>
+          <option value="A">A (70% - 100%)</option>
+          <option value="B">B (60% - 69%)</option>
+          <option value="C">C (50% - 59%)</option>
+          <option value="D">D (45% - 49%)</option>
+          <option value="E">E (40% - 44%)</option>
+          <option value="F">F (0% - 39%)</option>
+        </select>
       </div>
+      <div className="input-group">
+        <label>Credit Hours:</label>
+        <input
+          type="text"
+          name="creditHours"
+          value={newCourse.creditHours}
+          onChange={handleInputChange}
+        />
+      </div>
+      <div className="input-group">
+        <label>Credit Points:</label>
+        <input
+          type="text"
+          name="creditPoints"
+          value={newCourse.creditPoints}
+          onChange={handleInputChange}
+        />
+      </div>
+      <div className="button-group">
+        <button onClick={addCourse}>Add Course</button>
+        <button onClick={calculateCGPA}>Calculate CGPA</button>
+      </div>
+      {cgpa && <p className="result">CGPA: {cgpa}</p>}
     </div>
   );
 };
